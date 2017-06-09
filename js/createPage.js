@@ -2,23 +2,23 @@ var data = [{
 	"intentName": "what",
 	"attributes": [
 		{
-			"name": "Name",
+			"name": "name",
 			"value": "Wojtek"
 		},
         {
-            "name": "Surname",
+            "name": "surname",
             "value": "Nowak"
         },
         {
-            "name": "Nationality",
+            "name": "nationality",
             "value": "Polish"
         },
 		{
-			"name": "Age",
+			"name": "age",
 			"value": "20"
 		},
         {
-            "name": "Number",
+            "name": "number",
             "value": "+48123456789"
         }
 	]
@@ -26,15 +26,15 @@ var data = [{
 	"intentName": "plane",
 	"attributes": [
         {
-			"name": "Destination",
+			"name": "destination",
 			"value": "Chicago"
 		},
 		{
-			"name": "Date",
+			"name": "date",
 			"value": "Monday"
 		},
         {
-            "name": "Carrier",
+            "name": "carrier",
             "value": "WizzAir"
         }
 	]
@@ -62,22 +62,62 @@ $.ajax({
     //crossDomain: true,
     dataType: "json",
     success: function( response ) {
+        console.log( response );
         load_data = true;
-        loaded_data = response; // server response
-        console.log(response);
+        loaded_data = response; // server response        
+        for(var i=0; i<data.length; i++){
+            for(var j=0; j<response.length; j++){
+                console.log(data[i]['intentName'] + " " + response[j]['intentName']);
+                if(data[i]['intentName'] == response[j]['intentName']){
+                    
+                    for(var k=0; k<response[j]["attributes"].length; k++){
+                        for(var l=0; l<data[i]["attributes"].length; l++){
+                            console.log(data[i]["attributes"][l]["name"] + " " + response[j]["attributes"][k]["name"]);
+                            console.log(data[i]["attributes"][l]["name"] + " " + response[j]["attributes"][k]["name"]);
+                            if(data[i]["attributes"][l]["name"] == response[j]["attributes"][k]["name"]){
+                                data[i]["attributes"][l]["value"] = response[j]["attributes"][k]["value"];
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            
+        }
+        console.log(data);
+        showData();
     },
     error: function(jqXHR, exception) { console.log( jqXHR );  console.log( exception );},
 });
 
-for(var i=0; i < forms.length; i++){
-    const p = data[i]["attributes"].map((e) => <FormElement name={e["name"]} defaultValue={e["value"]} key={e["name"]} />);
-    ReactDOM.render(
-        <div>{p}</div>,
-        document.getElementById(forms[i])
-    );
+function showData(){
+    for(var i=0; i < forms.length; i++){
+        const p = data[i]["attributes"].map((e) => <FormElement name={e["name"]} defaultValue={e["value"]} key={e["name"]} />);
+        ReactDOM.render(
+            <div>{p}</div>,
+            document.getElementById(forms[i])
+        );
+    }
 }
 
 $( "#saveButton" ).click(function() {
-    $('#'+form[i]+' > input').each(function () { /* ... */ });
+    for(var i=0;  i < data.length; i++){
+        for(var j=0; j < data[i]["attributes"].length; j++){
+            data[i]["attributes"][j]["value"] = $("#"+data[i]["attributes"][j]["name"]).val();
+        }
+    }
+    var to_send = JSON.stringify(data, null, 2);
+    $.ajax({
+        url: 'https://c85d0367.ngrok.io/api/web/v1/intents',
+        //crossDomain: true,
+        type: 'PUT',
+        data: to_send,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data) {
+            alert('Load was performed.');
+      }
+    });
 });
 
