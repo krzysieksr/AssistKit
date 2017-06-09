@@ -23,7 +23,7 @@ var data = [{
         }
 	]
 }, {
-	"intentName": "plane",
+	"intentName": "travel",
 	"attributes": [
         {
 			"name": "destination",
@@ -38,9 +38,17 @@ var data = [{
             "value": "WizzAir"
         }
 	]
+},{
+    "intentName": "health",
+    "attributes": [
+    {
+        "name":"blood group",
+        "value":"RH+"
+    }
+    ]
 }];
 
-var forms = ['FormPersonal', 'FormPlane'];
+var forms = ['FormPersonal', 'FormPlane', 'FormHealth'];
 
 function FormElement(props){
             return(
