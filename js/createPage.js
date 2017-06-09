@@ -42,7 +42,7 @@ var data = [{
     "intentName": "health",
     "attributes": [
     {
-        "name":"blood group",
+        "name":"blood",
         "value":"RH+"
     }
     ]
